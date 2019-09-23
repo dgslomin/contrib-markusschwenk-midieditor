@@ -118,7 +118,6 @@ public slots:
 
     void renameTrackMenuClicked(QAction* action);
     void removeTrackMenuClicked(QAction* action);
-    void showEventWidget(bool show);
     void showTrackMenuClicked(QAction* action);
     void muteTrackMenuClicked(QAction* action);
 
@@ -217,7 +216,6 @@ private:
         *_moveSelectedEventsToTrackMenu, *_moveSelectedEventsToChannelMenu,
         *_pasteToTrackMenu, *_pasteToChannelMenu, *_selectAllFromTrackMenu, *_selectAllFromChannelMenu;
 
-    QTabWidget* lowerTabWidget;
     QAction *_colorsByChannel, *_colorsByTracks, *_colorsShadeByVelocity;
 
     QComboBox *_chooseEditTrack, *_chooseEditChannel;
