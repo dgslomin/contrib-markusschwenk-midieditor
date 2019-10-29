@@ -234,8 +234,19 @@ void MatrixWidget::paintEvent(QPaintEvent* event)
         for (int i = startLineY; i <= endLineY; i++) {
             int startLine = yPosOfLine(i);
             QColor c(194, 230, 255);
-            if (i % 2 == 0) {
+
+            switch ((127 - i) % 12) {
+            case 0:
+            case 2:
+            case 4:
+            case 5:
+            case 7:
+            case 9:
+            case 11:
                 c = QColor(234, 246, 255);
+                break;
+            default:
+                break;
             }
 
             if (i > 127) {
