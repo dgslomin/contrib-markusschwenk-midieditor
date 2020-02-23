@@ -69,8 +69,10 @@ public:
     static QString controlChangeName(int control);
     int cursorTick();
     int pauseTick();
+    int stopTick();
     void setCursorTick(int tick);
     void setPauseTick(int tick);
+    void setStopTick(int tick);
     QString path();
     bool saved();
     void setSaved(bool b);
@@ -127,7 +129,7 @@ private:
     MidiChannel* channels[19];
 
     QString _path;
-    int midiTicks, maxTimeMS, _cursorTick, _pauseTick, _midiFormat;
+    int midiTicks, maxTimeMS, _cursorTick, _pauseTick, _stopTick, _midiFormat;
     Protocol* prot;
     QMultiMap<int, MidiEvent*>* playerMap;
     bool _saved;

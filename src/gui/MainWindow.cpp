@@ -703,6 +703,11 @@ void MainWindow::pause()
         if (MidiPlayer::isPlaying()) {
             file->setPauseTick(file->tick(MidiPlayer::timeMs()));
             stop(false, false, false);
+        } else {
+				if (file->stopTick() >= 0) {
+                file->setCursorTick(file->stopTick());
+                mw_matrixWidget->timeMsChanged(file->msOfTick(file->cursorTick()), true);
+            }
         }
     }
 }
@@ -713,6 +718,8 @@ void MainWindow::stop(bool autoConfirmRecord, bool addEvents, bool resetPause)
     if (!file) {
         return;
     }
+
+    file->setStopTick(file->tick(MidiPlayer::timeMs()));
 
     disconnect(MidiPlayer::playerThread(),
         SIGNAL(playerStopped()), this, SLOT(stop()));
