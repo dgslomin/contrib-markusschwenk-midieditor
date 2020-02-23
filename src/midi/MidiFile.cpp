@@ -49,6 +49,7 @@ MidiFile::MidiFile()
     prot->addEmptyAction("New file");
     _path = "";
     _pauseTick = -1;
+    _stopTick = -1;
     for (int i = 0; i < 19; i++) {
         channels[i] = new MidiChannel(this, i);
     }
@@ -94,6 +95,7 @@ MidiFile::MidiFile(QString path, bool* ok, QStringList* log)
     }
 
     _pauseTick = -1;
+    _stopTick = -1;
     _saved = true;
     midiTicks = 0;
     _cursorTick = 0;
@@ -1422,6 +1424,16 @@ int MidiFile::pauseTick()
 void MidiFile::setPauseTick(int tick)
 {
     _pauseTick = tick;
+}
+
+int MidiFile::stopTick()
+{
+    return _stopTick;
+}
+
+void MidiFile::setStopTick(int tick)
+{
+    _stopTick = tick;
 }
 
 bool MidiFile::save(QString path)
