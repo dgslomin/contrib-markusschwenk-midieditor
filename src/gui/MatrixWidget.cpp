@@ -1278,6 +1278,53 @@ QList<QPair<int, int> > MatrixWidget::divs()
     return currentDivs;
 }
 
+int MatrixWidget::divNumberForTime(int time)
+{
+    for (int divNumber = currentDivs.size() - 1; divNumber >= 0; divNumber--) {
+        if (currentDivs.at(divNumber).second <= time) return divNumber;
+    }
+
+    return 0;
+}
+
+int MatrixWidget::divStartTime(int time)
+{
+    int divNumber = divNumberForTime(time);
+    return currentDivs.at(divNumber).second;
+}
+
+int MatrixWidget::timeOneDivEarlier(int time)
+{
+    int divNumber = divNumberForTime(time);
+    int divStartTime = currentDivs.at(divNumber).second;
+    int previousDivStartTime;
+
+    if (divNumber > 0) {
+        previousDivStartTime = currentDivs.at(divNumber - 1).second;
+    } else {
+        int nextDivStartTime = currentDivs.at(divNumber + 1).second;
+        previousDivStartTime = divStartTime - (nextDivStartTime - divStartTime);
+    }
+
+    return previousDivStartTime + (time - divStartTime);
+}
+
+int MatrixWidget::timeOneDivLater(int time)
+{
+    int divNumber = divNumberForTime(time);
+    int divStartTime = currentDivs.at(divNumber).second;
+    int nextDivStartTime;
+
+    if (divNumber + 1 < currentDivs.size()) {
+        nextDivStartTime = currentDivs.at(divNumber + 1).second;
+    } else {
+        int previousDivStartTime = currentDivs.at(divNumber - 1).second;
+        nextDivStartTime = divStartTime + (divStartTime - previousDivStartTime);
+    }
+
+    return nextDivStartTime + (time - divStartTime);
+}
+
 int MatrixWidget::div()
 {
     return _div;

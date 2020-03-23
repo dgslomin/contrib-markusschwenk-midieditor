@@ -70,6 +70,10 @@ public:
     int msOfTick(int tick);
     int xPosOfMs(int ms);
     QList<QPair<int, int> > divs();
+    int divNumberForTime(int time);
+    int divStartTime(int time);
+    int timeOneDivEarlier(int time);
+    int timeOneDivLater(int time);
 
 public slots:
     void scrollXChanged(int scrollPositionX);

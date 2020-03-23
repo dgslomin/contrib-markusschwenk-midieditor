@@ -34,47 +34,6 @@
 #include "../protocol/Protocol.h"
 #include "../tool/Selection.h"
 
-static int getDivNumberForTime(QList<QPair<int, int> > divs, int time)
-{
-    for (int divNumber = divs.size() - 1; divNumber >= 0; divNumber--) {
-        if (divs.at(divNumber).second <= time) return divNumber;
-    }
-
-    return 0;
-}
-
-static int getTimeOneDivEarlier(QList<QPair<int, int> > divs, int time)
-{
-    int divNumber = getDivNumberForTime(divs, time);
-    int divStartTime = divs.at(divNumber).second;
-    int previousDivStartTime;
-
-    if (divNumber > 0) {
-        previousDivStartTime = divs.at(divNumber - 1).second;
-    } else {
-        int nextDivStartTime = divs.at(divNumber + 1).second;
-        previousDivStartTime = divStartTime - (nextDivStartTime - divStartTime);
-    }
-
-    return previousDivStartTime + (time - divStartTime);
-}
-
-static int getTimeOneDivLater(QList<QPair<int, int> > divs, int time)
-{
-    int divNumber = getDivNumberForTime(divs, time);
-    int divStartTime = divs.at(divNumber).second;
-    int nextDivStartTime;
-
-    if (divNumber + 1 < divs.size()) {
-        nextDivStartTime = divs.at(divNumber + 1).second;
-    } else {
-        int previousDivStartTime = divs.at(divNumber - 1).second;
-        nextDivStartTime = divStartTime + (divStartTime - previousDivStartTime);
-    }
-
-    return nextDivStartTime + (time - divStartTime);
-}
-
 TimeTweakTarget::TimeTweakTarget(MainWindow* mainWindow)
 {
     this->mainWindow = mainWindow;
@@ -140,11 +99,10 @@ void TimeTweakTarget::largeDecrease()
         if (selectedEvents.size() > 0) {
             Protocol* protocol = file->protocol();
             protocol->startNewAction("Tweak");
-            QList<QPair<int, int> > divs = mainWindow->matrixWidget()->divs();
 
             foreach (MidiEvent* e, selectedEvents) {
                 int time = e->midiTime();
-                int newTime = getTimeOneDivEarlier(divs, time);
+                int newTime = mainWindow->matrixWidget()->timeOneDivEarlier(time);
                 if (newTime >= 0) {
                     e->setMidiTime(newTime);
 
@@ -172,11 +130,10 @@ void TimeTweakTarget::largeIncrease()
         if (selectedEvents.size() > 0) {
             Protocol* protocol = file->protocol();
             protocol->startNewAction("Tweak");
-            QList<QPair<int, int> > divs = mainWindow->matrixWidget()->divs();
 
             foreach (MidiEvent* e, selectedEvents) {
                 int time = e->midiTime();
-                int newTime = getTimeOneDivLater(divs, time);
+                int newTime = mainWindow->matrixWidget()->timeOneDivLater(time);
                 e->setMidiTime(newTime);
 
                 OnEvent* onEvent = dynamic_cast<OnEvent*>(e);
@@ -248,10 +205,9 @@ void StartTimeTweakTarget::largeDecrease()
         if (selectedEvents.size() > 0) {
             Protocol* protocol = file->protocol();
             protocol->startNewAction("Tweak");
-            QList<QPair<int, int> > divs = mainWindow->matrixWidget()->divs();
 
             foreach (MidiEvent* e, selectedEvents) {
-                int newTime = getTimeOneDivEarlier(divs, e->midiTime());
+                int newTime = mainWindow->matrixWidget()->timeOneDivEarlier(e->midiTime());
                 if (newTime >= 0) e->setMidiTime(newTime);
             }
 
@@ -270,10 +226,9 @@ void StartTimeTweakTarget::largeIncrease()
         if (selectedEvents.size() > 0) {
             Protocol* protocol = file->protocol();
             protocol->startNewAction("Tweak");
-            QList<QPair<int, int> > divs = mainWindow->matrixWidget()->divs();
 
             foreach (MidiEvent* e, selectedEvents) {
-                int newTime = getTimeOneDivLater(divs, e->midiTime());
+                int newTime = mainWindow->matrixWidget()->timeOneDivLater(e->midiTime());
                 e->setMidiTime(newTime);
 
                 OnEvent* onEvent = dynamic_cast<OnEvent*>(e);
@@ -354,19 +309,18 @@ void EndTimeTweakTarget::largeDecrease()
         if (selectedEvents.size() > 0) {
             Protocol* protocol = file->protocol();
             protocol->startNewAction("Tweak");
-            QList<QPair<int, int> > divs = mainWindow->matrixWidget()->divs();
 
             foreach (MidiEvent* e, selectedEvents) {
                 OnEvent* onEvent = dynamic_cast<OnEvent*>(e);
                 if (onEvent) {
                     MidiEvent* offEvent = onEvent->offEvent();
-                    int newTime = getTimeOneDivEarlier(divs, offEvent->midiTime());
+                    int newTime = mainWindow->matrixWidget()->timeOneDivEarlier(offEvent->midiTime());
                     if (newTime >= 0) {
                         offEvent->setMidiTime(newTime);
                         if (newTime < onEvent->midiTime()) onEvent->setMidiTime(newTime);
                     }
                 } else {
-                    int newTime = getTimeOneDivEarlier(divs, e->midiTime());
+                    int newTime = mainWindow->matrixWidget()->timeOneDivEarlier(e->midiTime());
                     if (newTime >= 0) e->setMidiTime(newTime);
                 }
             }
@@ -386,16 +340,15 @@ void EndTimeTweakTarget::largeIncrease()
         if (selectedEvents.size() > 0) {
             Protocol* protocol = file->protocol();
             protocol->startNewAction("Tweak");
-            QList<QPair<int, int> > divs = mainWindow->matrixWidget()->divs();
 
             foreach (MidiEvent* e, selectedEvents) {
                 OnEvent* onEvent = dynamic_cast<OnEvent*>(e);
                 if (onEvent) {
                     MidiEvent* offEvent = onEvent->offEvent();
-                    int newTime = getTimeOneDivLater(divs, offEvent->midiTime());
+                    int newTime = mainWindow->matrixWidget()->timeOneDivLater(offEvent->midiTime());
                     offEvent->setMidiTime(newTime);
                 } else {
-                    int newTime = getTimeOneDivLater(divs, e->midiTime());
+                    int newTime = mainWindow->matrixWidget()->timeOneDivLater(e->midiTime());
                     e->setMidiTime(newTime);
                 }
             }

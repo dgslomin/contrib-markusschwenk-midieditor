@@ -73,6 +73,8 @@ public slots:
     void forward();
     void back();
     void backToBegin();
+    void forwardDiv();
+    void backDiv();
     void forwardMarker();
     void backMarker();
     void load();

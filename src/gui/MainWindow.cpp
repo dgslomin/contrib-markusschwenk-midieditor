@@ -850,6 +850,55 @@ void MainWindow::backToBegin()
     mw_matrixWidget->update();
 }
 
+void MainWindow::forwardDiv()
+{
+    if (!file)
+        return;
+
+    QList<TimeSignatureEvent*>* eventlist = new QList<TimeSignatureEvent*>;
+    int oldTick = file->cursorTick();
+    if (file->pauseTick() >= 0) {
+        oldTick = file->pauseTick();
+    }
+    if (MidiPlayer::isPlaying() && !MidiInput::recording()) {
+        oldTick = file->tick(MidiPlayer::timeMs());
+        stop(true);
+    }
+    int newTick = mw_matrixWidget->timeOneDivLater(mw_matrixWidget->divStartTime(oldTick));
+    file->setPauseTick(-1);
+    if (newTick <= file->endTick()) {
+        file->setCursorTick(newTick);
+        mw_matrixWidget->timeMsChanged(file->msOfTick(newTick), true);
+    }
+    mw_matrixWidget->update();
+}
+
+void MainWindow::backDiv()
+{
+    if (!file)
+        return;
+
+    QList<TimeSignatureEvent*>* eventlist = new QList<TimeSignatureEvent*>;
+    int oldTick = file->cursorTick();
+    if (file->pauseTick() >= 0) {
+        oldTick = file->pauseTick();
+    }
+    if (MidiPlayer::isPlaying() && !MidiInput::recording()) {
+        oldTick = file->tick(MidiPlayer::timeMs());
+        stop(true);
+    }
+    int newTick = mw_matrixWidget->divStartTime(oldTick);
+    if (newTick == oldTick) {
+        newTick = mw_matrixWidget->timeOneDivEarlier(newTick);
+    }
+    file->setPauseTick(-1);
+    if (newTick >= 0) {
+        file->setCursorTick(newTick);
+        mw_matrixWidget->timeMsChanged(file->msOfTick(newTick), true);
+    }
+    mw_matrixWidget->update();
+}
+
 void MainWindow::forwardMarker()
 {
     if (!file)
@@ -2803,6 +2852,22 @@ QWidget* MainWindow::setupActions(QWidget* parent)
     forwAction->setShortcuts(forwActionShortcuts);
     connect(forwAction, SIGNAL(triggered()), this, SLOT(forward()));
     playbackMB->addAction(forwAction);
+
+    playbackMB->addSeparator();
+
+    QAction* backDivAction = new QAction("Previous raster", this);
+    backDivAction->setIcon(QIcon(":/run_environment/graphics/tool/back.png"));
+    QList<QKeySequence> backDivActionShortcuts;
+    backDivAction->setShortcut(QKeySequence(Qt::Key_Left + Qt::ALT + Qt::SHIFT));
+    connect(backDivAction, SIGNAL(triggered()), this, SLOT(backDiv()));
+    playbackMB->addAction(backDivAction);
+
+    QAction* forwDivAction = new QAction("Next raster", this);
+    forwDivAction->setIcon(QIcon(":/run_environment/graphics/tool/forward.png"));
+    QList<QKeySequence> forwDivActionShortcuts;
+    forwDivAction->setShortcut(QKeySequence(Qt::Key_Right + Qt::ALT + Qt::SHIFT));
+    connect(forwDivAction, SIGNAL(triggered()), this, SLOT(forwardDiv()));
+    playbackMB->addAction(forwDivAction);
 
     playbackMB->addSeparator();
 
