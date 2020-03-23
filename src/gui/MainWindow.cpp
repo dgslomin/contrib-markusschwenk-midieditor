@@ -2245,13 +2245,13 @@ QWidget* MainWindow::setupActions(QWidget* parent)
 {
 
     // Menubar
-    QMenu* fileMB = menuBar()->addMenu("File");
-    QMenu* editMB = menuBar()->addMenu("Edit");
-    QMenu* toolsMB = menuBar()->addMenu("Tools");
-    QMenu* viewMB = menuBar()->addMenu("View");
-    QMenu* playbackMB = menuBar()->addMenu("Playback");
-    QMenu* midiMB = menuBar()->addMenu("Midi");
-    QMenu* helpMB = menuBar()->addMenu("Help");
+    QMenu* fileMB = menuBar()->addMenu("&File");
+    QMenu* editMB = menuBar()->addMenu("&Edit");
+    QMenu* toolsMB = menuBar()->addMenu("&Tools");
+    QMenu* viewMB = menuBar()->addMenu("&View");
+    QMenu* playbackMB = menuBar()->addMenu("&Playback");
+    QMenu* midiMB = menuBar()->addMenu("&Midi");
+    QMenu* helpMB = menuBar()->addMenu("&Help");
 
     // File
     QAction* newAction = new QAction("New", this);
@@ -2902,13 +2902,17 @@ QWidget* MainWindow::setupActions(QWidget* parent)
     QActionGroup* speedGroup = new QActionGroup(this);
     speedGroup->setExclusive(true);
 
+    int speedNumber = 0;
     foreach (double s, speeds) {
         QAction* speedAction = new QAction(QString::number(s), this);
         speedAction->setData(QVariant::fromValue(s));
+        QList<QKeySequence> speedActionShortcuts;
+        speedAction->setShortcut(QKeySequence(Qt::Key_S, Qt::Key_1 + speedNumber));
         speedMenu->addAction(speedAction);
         speedGroup->addAction(speedAction);
         speedAction->setCheckable(true);
         speedAction->setChecked(s == 1);
+        speedNumber++;
     }
 
     playbackMB->addMenu(speedMenu);
