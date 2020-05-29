@@ -50,6 +50,8 @@ public:
     static QString modeToString(int mode);
     void setMode(int mode);
     void setEditMode(int mode);
+    void setMaxTempo(int max_tempo);
+    int maxTempo();
 
 public slots:
     void setChannel(int);
@@ -73,6 +75,7 @@ private:
     int mode;
     int channel;
     int controller;
+    int max_tempo;
 
     void resetState();
 

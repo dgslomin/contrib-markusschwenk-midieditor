@@ -16,10 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <QList>
 #include <QPair>
 #include "MainWindow.h"
 #include "MatrixWidget.h"
+#include "MiscWidget.h"
 #include "TweakTarget.h"
 #include "../MidiEvent/ChannelPressureEvent.h"
 #include "../MidiEvent/ControlChangeEvent.h"
@@ -506,3 +508,45 @@ void ValueTweakTarget::largeIncrease()
 {
     offset(10, 500, 50);
 }
+
+MaxTempoTweakTarget::MaxTempoTweakTarget(MiscWidget* miscWidget)
+{
+    this->miscWidget = miscWidget;
+}
+
+void MaxTempoTweakTarget::offset(int amount)
+{
+    miscWidget->setMaxTempo(std::max(miscWidget->maxTempo() + amount, 0));
+}
+
+void MaxTempoTweakTarget::smallDecrease()
+{
+    offset(-1);
+}
+
+void MaxTempoTweakTarget::smallIncrease()
+{
+    offset(1);
+}
+
+void MaxTempoTweakTarget::mediumDecrease()
+{
+    offset(-10);
+}
+
+
+void MaxTempoTweakTarget::mediumIncrease()
+{
+    offset(10);
+}
+
+void MaxTempoTweakTarget::largeDecrease()
+{
+    offset(-50);
+}
+
+void MaxTempoTweakTarget::largeIncrease()
+{
+    offset(50);
+}
+

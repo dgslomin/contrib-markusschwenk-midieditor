@@ -186,6 +186,7 @@ public slots:
     void tweakEndTime();
     void tweakNote();
     void tweakValue();
+    void tweakMaxTempo();
     void tweakSmallDecrease();
     void tweakSmallIncrease();
     void tweakMediumDecrease();

@@ -2496,6 +2496,11 @@ QWidget* MainWindow::setupActions(QWidget* parent)
     connect(tweakValueAction, SIGNAL(triggered()), this, SLOT(tweakValue()));
     tweakMenu->addAction(tweakValueAction);
 
+    QAction* tweakMaxTempoAction = new QAction("Max tempo", tweakMenu);
+    tweakMaxTempoAction->setCheckable(true);
+    connect(tweakMaxTempoAction, SIGNAL(triggered()), this, SLOT(tweakMaxTempo()));
+    tweakMenu->addAction(tweakMaxTempoAction);
+
     QActionGroup* tweakTargetActionGroup = new QActionGroup(this);
     tweakTargetActionGroup->setExclusive(true);
     tweakTargetActionGroup->addAction(tweakTimeAction);
@@ -2503,6 +2508,7 @@ QWidget* MainWindow::setupActions(QWidget* parent)
     tweakTargetActionGroup->addAction(tweakEndTimeAction);
     tweakTargetActionGroup->addAction(tweakNoteAction);
     tweakTargetActionGroup->addAction(tweakValueAction);
+    tweakTargetActionGroup->addAction(tweakMaxTempoAction);
     tweakTimeAction->setChecked(true);
 
     tweakMenu->addSeparator();
@@ -3367,6 +3373,11 @@ void MainWindow::tweakNote() {
 void MainWindow::tweakValue() {
     delete currentTweakTarget;
     currentTweakTarget = new ValueTweakTarget(this);
+}
+
+void MainWindow::tweakMaxTempo() {
+    delete currentTweakTarget;
+    currentTweakTarget = new MaxTempoTweakTarget(_miscWidget);
 }
 
 void MainWindow::tweakSmallDecrease() {

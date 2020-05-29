@@ -31,6 +31,7 @@ MiscWidget::MiscWidget(MatrixWidget* mw, QWidget* parent)
     mode = VelocityEditor;
     channel = 0;
     controller = 0;
+    max_tempo = 500;
     dragY = 0;
     isDrawingFreehand = false;
     isDrawingLine = false;
@@ -72,6 +73,18 @@ void MiscWidget::setEditMode(int mode)
     this->edit_mode = mode;
     resetState();
     computeMinMax();
+}
+
+void MiscWidget::setMaxTempo(int max_tempo)
+{
+    this->max_tempo = max_tempo;
+    resetState();
+    computeMinMax();
+}
+
+int MiscWidget::maxTempo()
+{
+    return this->max_tempo;
 }
 
 void MiscWidget::setChannel(int channel)
@@ -1233,7 +1246,7 @@ void MiscWidget::computeMinMax()
         break;
     }
     case TempoEditor: {
-        _max = 500; // Reasonable but arbitrary; maybe add to preferences?
+        _max = max_tempo;
         _default = 120;
         break;
     }

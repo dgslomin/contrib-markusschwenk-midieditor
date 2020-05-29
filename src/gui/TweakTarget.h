@@ -107,4 +107,19 @@ protected:
     void offset(int amount, int pitchBendAmount, int tempoAmount);
 };
 
+class MaxTempoTweakTarget : public TweakTarget {
+public:
+    MaxTempoTweakTarget(MiscWidget* miscWidget);
+    void smallDecrease();
+    void smallIncrease();
+    void mediumDecrease();
+    void mediumIncrease();
+    void largeDecrease();
+    void largeIncrease();
+
+protected:
+    MiscWidget* miscWidget;
+    void offset(int amount);
+};
+
 #endif
