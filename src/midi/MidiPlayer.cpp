@@ -110,11 +110,20 @@ void MidiPlayer::panic()
         MidiOutput::sendCommand(array);
     }
     if (MidiOutput::isAlternativePlayer) {
-        foreach (int channel, MidiOutput::playedNotes.keys()) {
-            foreach (int note, MidiOutput::playedNotes.value(channel)) {
+        for (int channel = 0; channel < 16; channel++) {
+            for (int note = 0; note < 128; note++) {
                 QByteArray array;
                 array.append(0x80 | channel);
                 array.append(char(note));
+                array.append(char(0));
+                MidiOutput::sendCommand(array);
+            }
+
+            {
+                // sustain
+                QByteArray array;
+                array.append(0xB0 | channel);
+                array.append(char(0x40));
                 array.append(char(0));
                 MidiOutput::sendCommand(array);
             }
